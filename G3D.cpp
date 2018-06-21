@@ -113,8 +113,8 @@ void G3D::p2init()
 		p2xsize = 1;
 		p2ysize = ((float)h1)/((float)w1);
 	} else {
-		p2ysize = 1;
 		p2xsize = ((float)w1)/((float)h1);
+		p2ysize = 1;
 	}
 	
 	/*
