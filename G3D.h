@@ -39,8 +39,9 @@ class G3D
 		
         void    begin();
         void    end();
-        void    move(float x, float y);
-        void    draw(float x, float y);
+        void    move(uint16_t x, uint16_t y);
+        void    draw(uint16_t x, uint16_t y);
+        void    point(uint16_t x, uint16_t y);
     private:
         /*
          *  Internal state
@@ -54,20 +55,6 @@ class G3D
          */
         
         uint16_t color;
-        
-        /*
-         *	State 2 pipeline; map -1/1 to screen coordinates
-         */
-        
-        void	p2init();
-        void	p2movedraw(bool drawFlag, float x, float y);
-        void	p2point(float x, float y);
-        
-        float	p2xsize;		// Width is +/- p2xsize
-        float	p2ysize;		// Height is +/- p2ysize
-        float	p2scale;		// Assume square pixels.
-        float	p2xoff;
-        float	p2yoff;
 
         /*
          *  State 1 pipeline

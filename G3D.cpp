@@ -23,7 +23,6 @@ G3D::G3D(Adafruit_GFX &l) : lib(l)
 	
 	/* Initialize components of pipeline */
 	p1init();
-	p2init();
 }
 
 G3D::~G3D()
@@ -63,93 +62,19 @@ void G3D::end()
 /*                                                                  */
 /********************************************************************/
 
-void G3D::move(float x, float y)
+void G3D::move(uint16_t x, uint16_t y)
 {
-	p2movedraw(false,x,y);
+	p1movedraw(false,x,y);
 }
 
-void G3D::draw(float x, float y)
+void G3D::draw(uint16_t x, uint16_t y)
 {
-	p2movedraw(true,x,y);
+	p1movedraw(true,x,y);
 }
 
-/********************************************************************/
-/*                                                                  */
-/*  Move/Draw Level 2												*/
-/*                                                                  */
-/********************************************************************/
-
-/*	G3D::p2init
- *
- *		Initialize p2 framework
- */
-
-void G3D::p2init()
+void G3D::point(uint16_t x, uint16_t y)
 {
-	/*
-	 *	We subtract one because we want our mapping to work so that
-	 *	virtual coordinate -1 is in the middle of the 0th pixel, and
-	 *	+1 is in the middle of the width-1 pixel for wide displays.
-	 *
-	 *	This offset of 1/2 by the pixel width implies we're drawing on
-	 *	a display 1 pixel narrower and wider, but then with 1/2 added
-	 *	to the pixel coordinate
-	 */
-	
-	uint16_t h1 = height - 1;
-	uint16_t w1 = width - 1;
-	
-	/*
-	 *	Calculate the width, height in abstract coordinates. This
-	 *	allows me to quickly clip at the clipping level
-	 */
-	
-	if (w1 > h1) {
-		p2xsize = 1;
-		p2ysize = ((float)h1)/((float)w1);
-	} else {
-		p2ysize = 1;
-		p2xsize = ((float)w1)/((float)h1);
-	}
-	
-	/*
-	 *	Calculate the scale, offset to transform virtual to real.
-	 *	Note that -1 -> 0 and 1 -> (width-1) or (height-1).
-	 */
-	
-	if (w1 > h1) {
-		p2scale = ((float)w1)/2;
-	} else {
-		p2scale = ((float)h1)/2;
-	}
-	
-	p2xoff = ((float)width)/2;
-	p2yoff = ((float)height)/2;
-}
-
-/*	p2point
- *
- *		Draw a point at the virtual location on the screen. This
- *	does the appropriate math to scale to our screen coordinates
- */
-
-void G3D::p2point(float x, float y)
-{
-	int16_t xpos = (int16_t)(x * p2scale + p2xoff);
-	int16_t ypos = (int16_t)(y * p2scale + p2yoff);
-	p1point(xpos,ypos);
-}
-
-/*	p2movedraw
- *
- *		Move/draw for virtual coordinates
- */
-
-void G3D::p2movedraw(bool drawFlag, float x, float y)
-{
-	int16_t xpos = (int16_t)(x * p2scale + p2xoff);
-	int16_t ypos = (int16_t)(y * p2scale + p2yoff);
-	p1movedraw(drawFlag,xpos,ypos);
+	p1point(x,y);
 }
 
 /********************************************************************/

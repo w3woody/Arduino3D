@@ -36,11 +36,13 @@ void loop()
     
     draw.begin();
     draw.setColor(ILI9341_RED);
-    draw.move(-0.5,-1);
-    draw.draw(0.5,-1);
-    draw.draw(0.5,1);
-    draw.draw(-0.5,1);
-    draw.draw(-0.5,-1);
+    draw.move(0,0);
+    draw.draw(0,100);
+    draw.draw(100,100);
+    draw.draw(100,0);
+    draw.draw(0,0);
+    draw.move(100,120);
+    draw.draw(100,140);
     draw.end();
         
     for (;;) ;
