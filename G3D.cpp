@@ -73,6 +73,11 @@ void G3D::draw(float x, float y)
 	p2movedraw(true,x,y);
 }
 
+void G3D::point(float x, float y)
+{
+	p2point(x,y);
+}
+
 /********************************************************************/
 /*                                                                  */
 /*  Move/Draw Level 2												*/
@@ -135,8 +140,9 @@ void G3D::p2init()
 
 void G3D::p2point(float x, float y)
 {
-	int16_t xpos = (int16_t)(x * p2scale + p2xoff);
-	int16_t ypos = (int16_t)(y * p2scale + p2yoff);
+	// Flip y coordinate so -1 is at bottom
+	int16_t xpos = (int16_t)(p2xoff + x * p2scale);
+	int16_t ypos = (int16_t)(p2yoff - y * p2scale);
 	p1point(xpos,ypos);
 }
 
@@ -147,8 +153,9 @@ void G3D::p2point(float x, float y)
 
 void G3D::p2movedraw(bool drawFlag, float x, float y)
 {
-	int16_t xpos = (int16_t)(x * p2scale + p2xoff);
-	int16_t ypos = (int16_t)(y * p2scale + p2yoff);
+	// Flip y coordinate so -1 is at bottom
+	int16_t xpos = (int16_t)(p2xoff + x * p2scale);
+	int16_t ypos = (int16_t)(p2yoff - y * p2scale);
 	p1movedraw(drawFlag,xpos,ypos);
 }
 

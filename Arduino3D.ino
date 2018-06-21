@@ -41,6 +41,12 @@ void loop()
     draw.draw(0.5,1);
     draw.draw(-0.5,1);
     draw.draw(-0.5,-1);
+    
+    draw.move(-0.75,-0.75);
+    draw.draw(-0.5,-0.75);
+    draw.draw(-0.5,-0.5);
+    draw.draw(-0.75,-0.5);
+    draw.draw(-0.75,-0.75);
     draw.end();
         
     for (;;) ;

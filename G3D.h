@@ -41,6 +41,7 @@ class G3D
         void    end();
         void    move(float x, float y);
         void    draw(float x, float y);
+        void    point(float x, float y);
     private:
         /*
          *  Internal state
@@ -63,10 +64,10 @@ class G3D
         void	p2movedraw(bool drawFlag, float x, float y);
         void	p2point(float x, float y);
         
-        float	p2xsize;		// Width is +/- p2xsize
-        float	p2ysize;		// Height is +/- p2ysize
-        float	p2scale;		// Assume square pixels.
-        float	p2xoff;
+        float	p2xsize;		// viewport width +/-
+        float	p2ysize;		// viewport height +/-
+        float	p2scale;		// coordinate transform scale.
+        float	p2xoff;			// coordinate transform offset
         float	p2yoff;
 
         /*
