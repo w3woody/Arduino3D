@@ -24,30 +24,66 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 // Graphics setup
 G3D draw(tft);
 
+// Rotation
+static float GXAngle;
+static float GYAngle;
+
 void setup() 
 {
+    tft.begin();
+    
+    GXAngle = 15;
+    GYAngle = 30;
+}
 
+void transform()
+{
+    G3DMatrix m;
+
+    draw.transformation.setPerspective(1.0f,0.5f);
+
+    m.setTranslate(0,0,-6);
+    draw.transformation.multiply(m);
+
+    m.setRotate(AXIS_X,GXAngle);
+    draw.transformation.multiply(m);
+
+    m.setRotate(AXIS_Y,GYAngle);
+    draw.transformation.multiply(m);
+}
+
+void drawBox(int x, int y, int z)
+{
+    draw.move(x-1,y-1,z-1);
+    draw.draw(x+1,y-1,z-1);
+    draw.draw(x+1,y+1,z-1);
+    draw.draw(x-1,y+1,z-1);
+    draw.draw(x-1,y-1,z-1);
+    draw.draw(x-1,y-1,z+1);
+    draw.draw(x+1,y-1,z+1);
+    draw.draw(x+1,y+1,z+1);
+    draw.draw(x-1,y+1,z+1);
+    draw.draw(x-1,y-1,z+1);
+    draw.move(x+1,y-1,z-1);
+    draw.draw(x+1,y-1,z+1);
+    draw.move(x+1,y+1,z-1);
+    draw.draw(x+1,y+1,z+1);
+    draw.move(x-1,y+1,z-1);
+    draw.draw(x-1,y+1,z+1);
 }
 
 void loop() 
 {
-    tft.begin();
     tft.fillScreen(ILI9341_BLACK);
-    
+
     draw.begin();
     draw.setColor(ILI9341_RED);
-    draw.move(-0.5,-1);
-    draw.draw(0.5,-1);
-    draw.draw(0.5,1);
-    draw.draw(-0.5,1);
-    draw.draw(-0.5,-1);
+    transform();
+    drawBox(0,0,0); 
+    draw.end();   
     
-    draw.move(-0.75,-0.75);
-    draw.draw(-0.5,-0.75);
-    draw.draw(-0.5,-0.5);
-    draw.draw(-0.75,-0.5);
-    draw.draw(-0.75,-0.75);
-    draw.end();
-        
+    GXAngle += 0.01;
+    GYAngle += 0.02;
+    
     for (;;) ;
 }

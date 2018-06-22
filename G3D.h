@@ -8,14 +8,9 @@
 
 #include <stdint.h>
 #include <Adafruit_GFX.h>    // Core graphics library
+#include "G3DMath.h"
 
-/********************************************************************/
-/*                                                                  */
-/*  Math Structures                                                 */
-/*                                                                  */
-/********************************************************************/
-
-/********************************************************************/
+ /********************************************************************/
 /*                                                                  */
 /*  G3D class, requires reference to GFX library and screen size    */
 /*                                                                  */
@@ -39,9 +34,21 @@ class G3D
 		
         void    begin();
         void    end();
-        void    move(float x, float y);
-        void    draw(float x, float y);
-        void    point(float x, float y);
+        void    move(float x, float y, float z)
+        			{
+        				p4movedraw(false,x,y,z);
+        			}
+        void    draw(float x, float y, float z)
+        			{
+        				p4movedraw(true,x,y,z);
+        			}
+        void    point(float x, float y, float z)
+        			{
+        				p4point(x,y,z);
+        			}
+        
+        G3DMatrix transformation;
+        
     private:
         /*
          *  Internal state
@@ -57,7 +64,25 @@ class G3D
         uint16_t color;
         
         /*
-         *	State 2 pipeline; map -1/1 to screen coordinates
+         *	Stage 4 pipeline; 3D transformation
+         */
+        
+        void	p4point(float x, float y, float z);
+        void	p4movedraw(bool drawFlag, float x, float y, float z);
+        
+        /*
+         *	Stage 3 pipeline; 3D clipping engine
+         */
+        
+        G3DVector p3pos;
+        uint8_t	p3outcode;
+        
+        void	p3init();
+        void	p3movedraw(bool drawFlag, const G3DVector &v);
+        void	p3point(const G3DVector &v);
+        
+        /*
+         *	Stage 2 pipeline; map -1/1 to screen coordinates
          */
         
         void	p2init();
@@ -71,7 +96,7 @@ class G3D
         float	p2yoff;
 
         /*
-         *  State 1 pipeline
+         *  Stage 1 pipeline
          */
 
         bool    p1draw;
@@ -83,4 +108,4 @@ class G3D
         void	p1point(uint16_t x, uint16_t y);
 };
 
-#endif
+#endif // _G3D_H
