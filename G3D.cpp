@@ -123,13 +123,13 @@ static uint8_t OutCode(const G3DVector &v)
  *		This is used to find the intersection of the vector with a wall
  */
 
-static void Lerp(const G3DVector &a, const G3DVector &b, float alpha, G3DVector &out)
+static void Lerp(const G3DVector &a, const G3DVector &b, float alpha, G3DVector &c)
 {
     float a1 = 1.0f - alpha;
-    out.x = a1 * a.x + alpha * b.x;
-    out.y = a1 * a.y + alpha * b.y;
-    out.z = a1 * a.z + alpha * b.z;
-    out.w = a1 * a.w + alpha * b.w;
+    c.x = a1 * a.x + alpha * b.x;
+    c.y = a1 * a.y + alpha * b.y;
+    c.z = a1 * a.z + alpha * b.z;
+    c.w = a1 * a.w + alpha * b.w;
 }
 
 /*	G3D::p3init 
@@ -214,7 +214,7 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                                 alpha = alpha/(alpha - (v.x + v.w));
                                 break;
                             case 1:         // clip (1,0,0,-1)
-                                alpha = p3pos.x - p3pos.w;
+                                alpha = - p3pos.x + p3pos.w;
                                 alpha = alpha/(alpha - (v.x - v.w));
                                 break;
                             case 2:         // clip (0,1,0,1)
@@ -222,7 +222,7 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                                 alpha = alpha/(alpha - (v.y + v.w));
                                 break;
                             case 3:         // clip (0,1,0,-1)
-                                alpha = p3pos.y - p3pos.w;
+                                alpha = - p3pos.y + p3pos.w;
                                 alpha = alpha/(alpha - (v.y - v.w));
                                 break;
                             case 4:         // clip (0,0,1,1)
