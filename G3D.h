@@ -46,9 +46,15 @@ class G3D
         			{
         				p4point(x,y,z);
         			}
+                
+        void	translate(float x, float y, float z);
+        void	scale(float x, float y, float z);
+        void	scale(float s);
+        void    rotate(uint8_t axis, float angle);
+        void	perspective(float fov, float nclip);
+        void	orthographic(void);
         
         G3DMatrix transformation;
-        
     private:
         /*
          *  Internal state
@@ -91,7 +97,8 @@ class G3D
         
         float	p2xsize;		// viewport width +/-
         float	p2ysize;		// viewport height +/-
-        float	p2scale;		// coordinate transform scale.
+        float	p2xscale;		// coordinate transform scale.
+        float	p2yscale;
         float	p2xoff;			// coordinate transform offset
         float	p2yoff;
 

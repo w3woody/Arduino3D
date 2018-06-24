@@ -163,7 +163,7 @@ void G3DMatrix::multiply(const G3DMatrix &m)
         for (uint8_t j = 0; j < 4; ++j) {
             n = 0.0f;
             for (uint8_t k = 0; k < 4; ++k) {
-                n += a[i][k] * m.a[k][j];
+                n += m.a[k][j] * a[i][k];
             }
             tmp[j] = n;
         }

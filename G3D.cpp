@@ -33,6 +33,61 @@ G3D::~G3D()
 
 /********************************************************************/
 /*                                                                  */
+/*  Transformations													*/
+/*                                                                  */
+/********************************************************************/
+
+void G3D::translate(float x, float y, float z)
+{
+	G3DMatrix m;
+	m.setTranslate(x,y,z);
+	transformation.multiply(m);
+}
+
+void G3D::scale(float x, float y, float z)
+{
+	G3DMatrix m;
+	m.setScale(x,y,z);
+	transformation.multiply(m);
+}
+
+void G3D::scale(float x)
+{
+	G3DMatrix m;
+	m.setScale(x);
+	transformation.multiply(m);
+}
+
+void G3D::rotate(uint8_t axis, float angle)
+{
+	G3DMatrix m;
+	m.setRotate(axis, angle);
+	transformation.multiply(m);
+}
+
+void G3D::perspective(float fov, float near)
+{
+	G3DMatrix m;
+	m.setPerspective(fov,near);
+	transformation.multiply(m);
+	
+	// Handle our screen's aspect ratio, so our output screen is -1,1 in X and y
+	m.setScale(1.0/p2xsize,1.0/p2ysize,1);
+	transformation.multiply(m);
+}
+
+void G3D::orthographic()
+{
+	G3DMatrix m;
+	m.setIdentity();
+	m.a[0][0] = 1.0/p2xsize;
+	m.a[1][1] = 1.0/p2ysize;
+	m.a[2][2] = 0;		// Flatten z
+	transformation.multiply(m);
+}
+
+/********************************************************************/
+/*                                                                  */
 /*  Begin/End														*/
 /*                                                                  */
 /********************************************************************/
@@ -306,7 +361,7 @@ void G3D::p2init()
 	
 	/*
 	 *	Calculate the width, height in abstract coordinates. This
-	 *	allows me to quickly clip at the clipping level
+	 *	allows me to quickly scale to match our viewport.
 	 */
 	
 	if (w1 > h1) {
@@ -319,15 +374,13 @@ void G3D::p2init()
 	
 	/*
 	 *	Calculate the scale, offset to transform virtual to real.
-	 *	Note that -1 -> 0 and 1 -> (width-1) or (height-1).
+	 *	Note that we scale each axis separately, so our screen is always
+	 *	-1/1. This "squishing" is handled by the perspective and orthographic
+	 *	projection routines above.
 	 */
 	
-	if (w1 > h1) {
-		p2scale = ((float)w1)/2;
-	} else {
-		p2scale = ((float)h1)/2;
-	}
-	
+	p2xscale = ((float)w1)/2;
+	p2yscale = ((float)h1)/2;
 	p2xoff = ((float)width)/2;
 	p2yoff = ((float)height)/2;
 }
@@ -341,8 +394,8 @@ void G3D::p2init()
 void G3D::p2point(float x, float y)
 {
 	// Flip y coordinate so -1 is at bottom
-	int16_t xpos = (int16_t)(p2xoff + x * p2scale);
-	int16_t ypos = (int16_t)(p2yoff - y * p2scale);
+	int16_t xpos = (int16_t)(p2xoff + x * p2xscale);
+	int16_t ypos = (int16_t)(p2yoff - y * p2yscale);
 	p1point(xpos,ypos);
 }
 
@@ -354,8 +407,8 @@ void G3D::p2point(float x, float y)
 void G3D::p2movedraw(bool drawFlag, float x, float y)
 {
 	// Flip y coordinate so -1 is at bottom
-	int16_t xpos = (int16_t)(p2xoff + x * p2scale);
-	int16_t ypos = (int16_t)(p2yoff - y * p2scale);
+	int16_t xpos = (int16_t)(p2xoff + x * p2xscale);
+	int16_t ypos = (int16_t)(p2yoff - y * p2yscale);
 	p1movedraw(drawFlag,xpos,ypos);
 }
 

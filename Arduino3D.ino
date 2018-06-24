@@ -38,18 +38,10 @@ void setup()
 
 void transform()
 {
-    G3DMatrix m;
-
-    draw.transformation.setPerspective(1.0f,0.5f);
-
-    m.setTranslate(0,0,-6);
-    draw.transformation.multiply(m);
-
-    m.setRotate(AXIS_X,GXAngle);
-    draw.transformation.multiply(m);
-
-    m.setRotate(AXIS_Y,GYAngle);
-    draw.transformation.multiply(m);
+    draw.perspective(1.0f,0.5f);
+    draw.translate(0,0,-6);
+    draw.rotate(AXIS_X,GXAngle);
+    draw.rotate(AXIS_Y,GYAngle);
 }
 
 void drawBox(int x, int y, int z)
