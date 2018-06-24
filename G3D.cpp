@@ -60,36 +60,6 @@ void G3D::end()
 
 /********************************************************************/
 /*                                                                  */
-/*  Move/Draw Support												*/
-/*                                                                  */
-/********************************************************************/
-
-void G3D::p4movedraw(bool drawFlag, float x, float y, float z)
-{
-    G3DVector t;
-
-    t.x = transformation.a[0][0] * x + transformation.a[0][1] * y + transformation.a[0][2] * z + transformation.a[0][3];
-    t.y = transformation.a[1][0] * x + transformation.a[1][1] * y + transformation.a[1][2] * z + transformation.a[1][3];
-    t.z = transformation.a[2][0] * x + transformation.a[2][1] * y + transformation.a[2][2] * z + transformation.a[2][3];
-    t.w = transformation.a[3][0] * x + transformation.a[3][1] * y + transformation.a[3][2] * z + transformation.a[3][3];
-
-    p3movedraw(drawFlag,t);
-}
-
-void G3D::p4point(float x, float y, float z)
-{
-    G3DVector t;
-
-    t.x = transformation.a[0][0] * x + transformation.a[0][1] * y + transformation.a[0][2] * z + transformation.a[0][3];
-    t.y = transformation.a[1][0] * x + transformation.a[1][1] * y + transformation.a[1][2] * z + transformation.a[1][3];
-    t.z = transformation.a[2][0] * x + transformation.a[2][1] * y + transformation.a[2][2] * z + transformation.a[2][3];
-    t.w = transformation.a[3][0] * x + transformation.a[3][1] * y + transformation.a[3][2] * z + transformation.a[3][3];
-
-    p3point(t);
-}
-
-/********************************************************************/
-/*                                                                  */
 /*  Move/Draw Level 3												*/
 /*                                                                  */
 /********************************************************************/
@@ -101,16 +71,18 @@ void G3D::p4point(float x, float y, float z)
  *	for detailed explanation
  */
 
-static uint8_t OutCode(const G3DVector &v)
+static uint8_t G3D::OutCode(const G3DVector &v)
 {
     uint8_t m = 0;
+    float px = p2xsize * v.x;
+    float py = p2ysize * v.y;
 
-    if (v.x < -v.w) m |= 1;
-    if (v.x > v.w) m |= 2;
-    if (v.y < -v.w) m |= 4;
-    if (v.y > v.w) m |= 8;
+    if (px < -v.w) m |= 1;      // (p2xsize,0,0,1)
+    if (px > v.w) m |= 2;       // (-p2xsize,0,0,1)
+    if (py < -v.w) m |= 4;      // (0,p2ysize,0,1)
+    if (py > v.w) m |= 8;       // (0,-p2ysize,0,1)
     if (v.z < -v.w) m |= 16;
-    if (v.z > 0) m |= 32;
+    if (v.z > v.w) m |= 32;
 
     return m;
 }
@@ -123,7 +95,7 @@ static uint8_t OutCode(const G3DVector &v)
  *		This is used to find the intersection of the vector with a wall
  */
 
-static void Lerp(const G3DVector &a, const G3DVector &b, float alpha, G3DVector &c)
+static void G3D::Lerp(const G3DVector &a, const G3DVector &b, float alpha, G3DVector &c)
 {
     float a1 = 1.0f - alpha;
     c.x = a1 * a.x + alpha * b.x;
@@ -209,28 +181,28 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
 
                         switch (i) {
                             default:
-                            case 0:         // clip (1,0,0,1)
-                                alpha = p3pos.x + p3pos.w;
+                            case 0:         // clip (p2xsize,0,0,1)
+                                alpha = p2xsize * p3pos.x + p3pos.w;
                                 alpha = alpha/(alpha - (v.x + v.w));
                                 break;
-                            case 1:         // clip (1,0,0,-1)
-                                alpha = - p3pos.x + p3pos.w;
+                            case 1:         // clip (-p2xsize,0,0,1)
+                                alpha = - p2xsize * p3pos.x + p3pos.w;
                                 alpha = alpha/(alpha - (v.x - v.w));
                                 break;
-                            case 2:         // clip (0,1,0,1)
-                                alpha = p3pos.y + p3pos.w;
+                            case 2:         // clip (0,p2ysize,0,1)
+                                alpha = p2ysize * p3pos.y + p3pos.w;
                                 alpha = alpha/(alpha - (v.y + v.w));
                                 break;
-                            case 3:         // clip (0,1,0,-1)
-                                alpha = - p3pos.y + p3pos.w;
+                            case 3:         // clip (0,-p2ysize,0,1)
+                                alpha = - p2ysize * p3pos.y + p3pos.w;
                                 alpha = alpha/(alpha - (v.y - v.w));
                                 break;
                             case 4:         // clip (0,0,1,1)
                                 alpha = p3pos.z + p3pos.w;
                                 alpha = alpha/(alpha - (v.z + v.w));
                                 break;
-                            case 5:         // clip (0,0,1,0)
-                                alpha = p3pos.z;
+                            case 5:         // clip (0,0,-1,1)
+                                alpha = - p3pos.z + p3pos.w;
                                 alpha = alpha/(alpha - v.z);
                                 break;
                         }
@@ -255,22 +227,22 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                     // Ran all clipping edges.
                     if (p3outcode) {
                         Lerp(p3pos,v,aold,lerp);
-						p2movedraw(false,lerp.x/lerp.w,lerp.y/lerp.w);
+                        p2movedraw(false,lerp.x/lerp.w,lerp.y/lerp.w);
                     }
 
                     // Draw to the new point
                     if (newOutCode) {
                         Lerp(p3pos,v,anew,lerp);
-						p2movedraw(true,lerp.x/lerp.w,lerp.y/lerp.w);
+                        p2movedraw(true,lerp.x/lerp.w,lerp.y/lerp.w);
                     } else {
-						p2movedraw(true,v.x/v.w,v.y/v.w);
+                        p2movedraw(true,v.x/v.w,v.y/v.w);
                     }
                 }
             }
         }
     } else {
         if (newOutCode == 0) {
-			p2movedraw(false,v.x/v.w,v.y/v.w);
+            p2movedraw(false,v.x/v.w,v.y/v.w);
         }
     }
 

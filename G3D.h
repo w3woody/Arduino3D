@@ -36,19 +36,20 @@ class G3D
         void    end();
         void    move(float x, float y, float z)
         			{
-        				p4movedraw(false,x,y,z);
+        				G3DVector v = { x, y, z, 1 };
+        				p3movedraw(false,v);
         			}
         void    draw(float x, float y, float z)
         			{
-        				p4movedraw(true,x,y,z);
+        				G3DVector v = { x, y, z, 1 };
+        				p3movedraw(true,v);
         			}
         void    point(float x, float y, float z)
         			{
-        				p4point(x,y,z);
+        				G3DVector v = { x, y, z, 1 };
+        				p3point(v);
         			}
-        
-        G3DMatrix transformation;
-        
+                
     private:
         /*
          *  Internal state
@@ -64,18 +65,14 @@ class G3D
         uint16_t color;
         
         /*
-         *	Stage 4 pipeline; 3D transformation
-         */
-        
-        void	p4point(float x, float y, float z);
-        void	p4movedraw(bool drawFlag, float x, float y, float z);
-        
-        /*
          *	Stage 3 pipeline; 3D clipping engine
          */
         
         G3DVector p3pos;
         uint8_t	p3outcode;
+        
+        uint8_t	OutCode(const G3DVector &v);
+        static void Lerp(const G3DVector &a, const G3DVector &b, float alpha, G3DVector &c);
         
         void	p3init();
         void	p3movedraw(bool drawFlag, const G3DVector &v);
