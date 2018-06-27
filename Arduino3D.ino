@@ -31,6 +31,7 @@ static float GYAngle;
 void setup() 
 {
     tft.begin();
+    tft.fillScreen(ILI9341_BLACK);
     
     GXAngle = 15;
     GYAngle = 30;
@@ -38,6 +39,7 @@ void setup()
 
 void transform()
 {
+    draw.transformation.setIdentity();
     draw.perspective(1.0f,0.5f);
     draw.translate(0,0,-6);
     draw.rotate(AXIS_X,GXAngle);
@@ -66,16 +68,19 @@ void drawBox(int x, int y, int z)
 
 void loop() 
 {
-    tft.fillScreen(ILI9341_BLACK);
-
     draw.begin();
     draw.setColor(ILI9341_RED);
     transform();
     drawBox(0,0,0); 
-    draw.end();   
-    
+    draw.end();
+
+    delay(100);
+
+    draw.begin();
+    draw.setColor(ILI9341_BLACK);
+    drawBox(0,0,0); 
+    draw.end();
+
     GXAngle += 0.01;
     GYAngle += 0.02;
-    
-    for (;;) ;
 }
