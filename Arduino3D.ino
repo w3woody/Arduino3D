@@ -33,8 +33,8 @@ void setup()
     tft.begin();
     tft.fillScreen(ILI9341_BLACK);
     
-    GXAngle = 15;
-    GYAngle = 30;
+    GXAngle = 0;
+    GYAngle = 0;
 }
 
 void transform()
