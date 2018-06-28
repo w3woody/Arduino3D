@@ -183,19 +183,19 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                             default:
                             case 0:         // clip (p2xsize,0,0,1)
                                 alpha = p2xsize * p3pos.x + p3pos.w;
-                                alpha = alpha/(alpha - (v.x + v.w));
+                                alpha = alpha/(alpha - (p2xsize * v.x + v.w));
                                 break;
                             case 1:         // clip (-p2xsize,0,0,1)
                                 alpha = - p2xsize * p3pos.x + p3pos.w;
-                                alpha = alpha/(alpha - (v.x - v.w));
+                                alpha = alpha/(alpha - (- p2xsize * v.x + v.w));
                                 break;
                             case 2:         // clip (0,p2ysize,0,1)
                                 alpha = p2ysize * p3pos.y + p3pos.w;
-                                alpha = alpha/(alpha - (v.y + v.w));
+                                alpha = alpha/(alpha - (p2ysize * v.y + v.w));
                                 break;
                             case 3:         // clip (0,-p2ysize,0,1)
                                 alpha = - p2ysize * p3pos.y + p3pos.w;
-                                alpha = alpha/(alpha - (v.y - v.w));
+                                alpha = alpha/(alpha - (- p2ysize * v.y + v.w));
                                 break;
                             case 4:         // clip (0,0,1,1)
                                 alpha = p3pos.z + p3pos.w;
