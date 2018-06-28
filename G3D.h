@@ -38,9 +38,9 @@ class G3D
 {
     public:
 #if USELIBRARY == 1
-                G3D(Adafruit_GFX &lib);
+                G3D(Adafruit_GFX &lib, uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 #elif USELIBRARY == 2
-                G3D(Arduboy &lib, uint16_t width, uint16_t height);
+                G3D(Arduboy &lib, uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 #endif
                 ~G3D();
 
@@ -89,6 +89,8 @@ class G3D
         Arduboy &lib;
 #endif
 
+		uint16_t xoffset;
+		uint16_t yoffset;
         uint16_t width;
         uint16_t height;
         

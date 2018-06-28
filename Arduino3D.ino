@@ -28,14 +28,15 @@
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
 // Graphics setup
-G3D draw(tft,128,64);
+//G3D draw(tft,0,0,tft.width(),tft.height());
+G3D draw(tft,10,10,108,44);
 
 #elif USELIBRARY == 2
 
 Arduboy arduboy;
 
 // Graphics setup
-G3D draw(arduboy,128,64);
+G3D draw(arduboy,10,10,108,44);
 
 #endif
 
@@ -54,8 +55,8 @@ void setup()
     arduboy.display();
 #endif
     
-    GXAngle = 15;
-    GYAngle = 30;
+    GXAngle = 0;
+    GYAngle = 0;
 }
 
 void transform()
@@ -74,6 +75,7 @@ void drawBox(int x, int y, int z)
     draw.draw(x+1,y+1,z-1);
     draw.draw(x-1,y+1,z-1);
     draw.draw(x-1,y-1,z-1);
+    /*
     draw.draw(x-1,y-1,z+1);
     draw.draw(x+1,y-1,z+1);
     draw.draw(x+1,y+1,z+1);
@@ -85,6 +87,7 @@ void drawBox(int x, int y, int z)
     draw.draw(x+1,y+1,z+1);
     draw.move(x-1,y+1,z-1);
     draw.draw(x-1,y+1,z+1);
+    */
 }
 
 #if USELIBRARY == 1

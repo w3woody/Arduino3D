@@ -17,19 +17,13 @@
  */
 
 #if USELIBRARY == 1
-G3D::G3D(Adafruit_GFX &l) : lib(l)
-{
-	width = l.width();
-	height = l.height();
-	
-	/* Initialize components of pipeline */
-	p1init();
-	p2init();
-	p3init();
-}
+G3D::G3D(Adafruit_GFX &l, uint16_t x, uint16_t y, uint16_t w, uint16_t h) : lib(l)
 #elif USELIBRARY == 2
-G3D::G3D(Arduboy &l, uint16_t w, uint16_t h) : lib(l)
+G3D::G3D(Arduboy &l, uint16_t x, uint16_t y, uint16_t w, uint16_t h) : lib(l)
+#endif
 {
+	xoffset = x;
+	yoffset = y;
 	width = w;
 	height = h;
 	
@@ -38,7 +32,6 @@ G3D::G3D(Arduboy &l, uint16_t w, uint16_t h) : lib(l)
 	p2init();
 	p3init();
 }
-#endif
 
 G3D::~G3D()
 {
@@ -108,7 +101,7 @@ void G3D::orthographic()
 /*	G3D::begin
  *
  *		Because we do a lot of drawing to draw a screen, we block out
- *	the begin/end calls
+ *	the begin/end calls (if required)
  */
 
 void G3D::begin()
@@ -285,17 +278,17 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                                 alpha = p3pos.x + p3pos.w;
                                 alpha = alpha/(alpha - (v.x + v.w));
                                 break;
-                            case 1:         // clip (1,0,0,-1)
+                            case 1:         // clip (-1,0,0,1)
                                 alpha = - p3pos.x + p3pos.w;
-                                alpha = alpha/(alpha - (v.x - v.w));
+                                alpha = alpha/(alpha - (- v.x + v.w));
                                 break;
                             case 2:         // clip (0,1,0,1)
                                 alpha = p3pos.y + p3pos.w;
                                 alpha = alpha/(alpha - (v.y + v.w));
                                 break;
-                            case 3:         // clip (0,1,0,-1)
+                            case 3:         // clip (0,-1,0,1)
                                 alpha = - p3pos.y + p3pos.w;
-                                alpha = alpha/(alpha - (v.y - v.w));
+                                alpha = alpha/(alpha - (- v.y + v.w));
                                 break;
                             case 4:         // clip (0,0,1,1)
                                 alpha = p3pos.z + p3pos.w;
@@ -467,9 +460,9 @@ void G3D::p1movedraw(bool drawFlag, uint16_t x, uint16_t y)
 	
 	if (drawFlag) {
 #if USELIBRARY == 1
-		lib.writeLine(p1x,p1y,x,y,color);
+		lib.writeLine(xoffset + p1x,yoffset + p1y,xoffset + x,yoffset + y,color);
 #elif USELIBRARY == 2
-		lib.drawLine(p1x,p1y,x,y,color);
+		lib.drawLine(xoffset + p1x,yoffset + p1y,xoffset + x,yoffset + y,color);
 #endif
 	}
 	
@@ -487,8 +480,8 @@ void G3D::p1movedraw(bool drawFlag, uint16_t x, uint16_t y)
 void G3D::p1point(uint16_t x, uint16_t y)
 {
 #if USELIBRARY == 1
-	lib.writePixel(x,y,color);
+	lib.writePixel(xoffset + x,yoffset + y,color);
 #elif USELIBRARY == 2
-	lib.drawPixel(x,y,color);
+	lib.drawPixel(xoffset + x,yoffset + y,color);
 #endif
 }
