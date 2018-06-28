@@ -6,11 +6,24 @@
 #ifndef _G3D_H
 #define _G3D_H
 
+/********************************************************************/
+/*                                                                  */
+/*  Globals														    */
+/*                                                                  */
+/********************************************************************/
+
+#define USELIBRARY			2	// 1 = Adafruit, 2 = Arduboy
+
 #include <stdint.h>
-#include <Adafruit_GFX.h>    // Core graphics library
 #include "G3DMath.h"
 
- /********************************************************************/
+#if USELIBRARY == 1
+#include <Adafruit_GFX.h>    // Core graphics library
+#elif USELIBRARY == 2
+#include <Arduboy.h>
+#endif
+
+/********************************************************************/
 /*                                                                  */
 /*  G3D class, requires reference to GFX library and screen size    */
 /*                                                                  */
@@ -24,14 +37,25 @@
 class G3D
 {
     public:
+#if USELIBRARY == 1
                 G3D(Adafruit_GFX &lib);
+#elif USELIBRARY == 2
+                G3D(Arduboy &lib, uint16_t width, uint16_t height);
+#endif
                 ~G3D();
 
-		void	setColor(int16_t c)
+#if USELIBRARY == 1
+		void	setColor(uint16_t c)
 					{
 						color = c;
 					}
-		
+#elif USELIBRARY == 2
+		void	setColor(uint8_t c)
+					{
+						color = c;
+					}
+#endif
+	
         void    begin();
         void    end();
         void    move(float x, float y, float z)
@@ -59,7 +83,12 @@ class G3D
         /*
          *  Internal state
          */
+#if USELIBRARY == 1
         Adafruit_GFX &lib;
+#elif USELIBRARY == 2
+        Arduboy &lib;
+#endif
+
         uint16_t width;
         uint16_t height;
         
@@ -67,8 +96,12 @@ class G3D
          *	Current drawing color
          */
         
+#if USELIBRARY == 1
         uint16_t color;
-        
+#elif USELIBRARY == 2
+        uint8_t color;
+#endif
+      
         /*
          *	Stage 4 pipeline; 3D transformation
          */

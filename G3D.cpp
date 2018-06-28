@@ -16,6 +16,7 @@
  *		Construct our pipeline
  */
 
+#if USELIBRARY == 1
 G3D::G3D(Adafruit_GFX &l) : lib(l)
 {
 	width = l.width();
@@ -26,6 +27,18 @@ G3D::G3D(Adafruit_GFX &l) : lib(l)
 	p2init();
 	p3init();
 }
+#elif USELIBRARY == 2
+G3D::G3D(Arduboy &l, uint16_t w, uint16_t h) : lib(l)
+{
+	width = w;
+	height = h;
+	
+	/* Initialize components of pipeline */
+	p1init();
+	p2init();
+	p3init();
+}
+#endif
 
 G3D::~G3D()
 {
@@ -100,7 +113,9 @@ void G3D::orthographic()
 
 void G3D::begin()
 {
+#if USELIBRARY == 1
 	lib.startWrite();
+#endif
 }
 
 /*	G3D::end
@@ -110,7 +125,9 @@ void G3D::begin()
 
 void G3D::end()
 {
+#if USELIBRARY == 1
 	lib.endWrite();
+#endif
 }
 
 /********************************************************************/
@@ -449,7 +466,11 @@ void G3D::p1movedraw(bool drawFlag, uint16_t x, uint16_t y)
 	 */
 	
 	if (drawFlag) {
+#if USELIBRARY == 1
 		lib.writeLine(p1x,p1y,x,y,color);
+#elif USELIBRARY == 2
+		lib.drawLine(p1x,p1y,x,y,color);
+#endif
 	}
 	
 	p1draw = drawFlag;
@@ -465,5 +486,9 @@ void G3D::p1movedraw(bool drawFlag, uint16_t x, uint16_t y)
 
 void G3D::p1point(uint16_t x, uint16_t y)
 {
+#if USELIBRARY == 1
 	lib.writePixel(x,y,color);
+#elif USELIBRARY == 2
+	lib.drawPixel(x,y,color);
+#endif
 }
