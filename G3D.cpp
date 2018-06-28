@@ -270,7 +270,7 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                                 break;
                             case 1:         // clip (1,0,0,-1)
                                 alpha = - p3pos.x + p3pos.w;
-                                alpha = alpha/(alpha - (v.x - v.w));
+                                alpha = alpha/(alpha - (- v.x + v.w));
                                 break;
                             case 2:         // clip (0,1,0,1)
                                 alpha = p3pos.y + p3pos.w;
@@ -278,7 +278,7 @@ void G3D::p3movedraw(bool drawFlag, const G3DVector &v)
                                 break;
                             case 3:         // clip (0,1,0,-1)
                                 alpha = - p3pos.y + p3pos.w;
-                                alpha = alpha/(alpha - (v.y - v.w));
+                                alpha = alpha/(alpha - (- v.y + v.w));
                                 break;
                             case 4:         // clip (0,0,1,1)
                                 alpha = p3pos.z + p3pos.w;
